@@ -1,6 +1,6 @@
 #![allow(dead_code)]
 
-mod vec4i;
+pub mod vec4i;
 
 mod test {
     use crate::vec4i::Vec4I;
