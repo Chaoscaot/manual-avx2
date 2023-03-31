@@ -1,4 +1,4 @@
-use std::arch::x86_64::{__m256i, _mm256_add_epi16, _mm256_add_epi32, _mm256_add_epi64, _mm256_add_epi8, _mm256_and_si256, _mm256_andnot_si256, _mm256_cmpeq_epi16, _mm256_cmpeq_epi32, _mm256_cmpeq_epi64, _mm256_cmpeq_epi8, _mm256_cmpgt_epi16, _mm256_cmpgt_epi32, _mm256_cmpgt_epi64, _mm256_cmpgt_epi8, _mm256_loadu_si256, _mm256_mul_epi32, _mm256_mul_epu32, _mm256_or_si256, _mm256_set1_epi16, _mm256_set1_epi32, _mm256_set1_epi64x, _mm256_set1_epi8, _mm256_setzero_si256, _mm256_storeu_si256, _mm256_sub_epi16, _mm256_sub_epi32, _mm256_sub_epi64, _mm256_sub_epi8, _mm256_xor_si256};
+use std::arch::x86_64::*;
 use std::fmt::{Debug, Display, Formatter};
 use std::ops::{Add, BitAnd, BitOr, BitXor, Mul, Not, Sub};
 use std::ptr::addr_of;
@@ -30,10 +30,9 @@ impl Vec4IType {
     }
 }
 
-pub struct Vec4I(__m256i, Vec4IType);
+pub struct VecInteger(__m256i, Vec4IType);
 
-#[feature(enable = "avx2")]
-impl Vec4I {
+impl VecInteger {
     #[inline(always)]
     pub fn new() -> Self {
         Self(unsafe { _mm256_setzero_si256() }, Vec4IType::I64X4)
@@ -176,57 +175,57 @@ impl Vec4I {
     }
 
     #[inline(always)]
-    pub fn add_i64(&self, rhs: &Vec4I) -> Self {
+    pub fn add_i64(&self, rhs: &VecInteger) -> Self {
         Self(unsafe { _mm256_add_epi64(self.0, rhs.0)}, Vec4IType::I64X4)
     }
 
     #[inline(always)]
-    pub fn add_i32(&self, rhs: &Vec4I) -> Self {
+    pub fn add_i32(&self, rhs: &VecInteger) -> Self {
         Self(unsafe { _mm256_add_epi32(self.0, rhs.0)}, Vec4IType::I32X8)
     }
 
     #[inline(always)]
-    pub fn add_i16(&self, rhs: &Vec4I) -> Self {
+    pub fn add_i16(&self, rhs: &VecInteger) -> Self {
         Self(unsafe { _mm256_add_epi16(self.0, rhs.0)}, Vec4IType::I16X16)
     }
 
     #[inline(always)]
-    pub fn add_i8(&self, rhs: &Vec4I) -> Self {
+    pub fn add_i8(&self, rhs: &VecInteger) -> Self {
         Self(unsafe { _mm256_add_epi8(self.0, rhs.0)}, Vec4IType::I8X32)
     }
 
     #[inline(always)]
-    pub fn mul_i32(&self, rhs: &Vec4I) -> Self {
+    pub fn mul_i32(&self, rhs: &VecInteger) -> Self {
         Self(unsafe { _mm256_mul_epi32(self.0, rhs.0)}, Vec4IType::I64X4)
     }
 
     #[inline(always)]
-    pub fn mul_u32(&self, rhs: &Vec4I) -> Self {
+    pub fn mul_u32(&self, rhs: &VecInteger) -> Self {
         Self(unsafe { _mm256_mul_epu32(self.0, rhs.0)}, Vec4IType::I64X4)
     }
 
     #[inline(always)]
-    pub fn sub_i64(&self, rhs: &Vec4I) -> Self {
+    pub fn sub_i64(&self, rhs: &VecInteger) -> Self {
         Self(unsafe { _mm256_sub_epi64(self.0, rhs.0)}, Vec4IType::I64X4)
     }
 
     #[inline(always)]
-    pub fn sub_i32(&self, rhs: &Vec4I) -> Self {
+    pub fn sub_i32(&self, rhs: &VecInteger) -> Self {
         Self(unsafe { _mm256_sub_epi32(self.0, rhs.0)}, Vec4IType::I32X8)
     }
 
     #[inline(always)]
-    pub fn sub_i16(&self, rhs: &Vec4I) -> Self {
+    pub fn sub_i16(&self, rhs: &VecInteger) -> Self {
         Self(unsafe { _mm256_sub_epi16(self.0, rhs.0)}, Vec4IType::I16X16)
     }
 
     #[inline(always)]
-    pub fn sub_i8(&self, rhs: &Vec4I) -> Self {
+    pub fn sub_i8(&self, rhs: &VecInteger) -> Self {
         Self(unsafe { _mm256_sub_epi8(self.0, rhs.0)}, Vec4IType::I8X32)
     }
 
     #[inline(always)]
-    pub fn eq(&self, rhs: &Vec4I) -> Self {
+    pub fn eq(&self, rhs: &VecInteger) -> Self {
         match self.1 {
             Vec4IType::I64X4 => self.eq_i64(rhs),
             Vec4IType::I32X8 => self.eq_i32(rhs),
@@ -240,27 +239,27 @@ impl Vec4I {
     }
 
     #[inline(always)]
-    pub fn eq_i64(&self, rhs: &Vec4I) -> Self {
+    pub fn eq_i64(&self, rhs: &VecInteger) -> Self {
         Self(unsafe { _mm256_cmpeq_epi64(self.0, rhs.0)}, Vec4IType::I64X4)
     }
 
     #[inline(always)]
-    pub fn eq_i32(&self, rhs: &Vec4I) -> Self {
+    pub fn eq_i32(&self, rhs: &VecInteger) -> Self {
         Self(unsafe { _mm256_cmpeq_epi32(self.0, rhs.0)}, Vec4IType::I32X8)
     }
 
     #[inline(always)]
-    pub fn eq_i16(&self, rhs: &Vec4I) -> Self {
+    pub fn eq_i16(&self, rhs: &VecInteger) -> Self {
         Self(unsafe { _mm256_cmpeq_epi16(self.0, rhs.0)}, Vec4IType::I16X16)
     }
 
     #[inline(always)]
-    pub fn eq_i8(&self, rhs: &Vec4I) -> Self {
+    pub fn eq_i8(&self, rhs: &VecInteger) -> Self {
         Self(unsafe { _mm256_cmpeq_epi8(self.0, rhs.0)}, Vec4IType::I8X32)
     }
 
     #[inline(always)]
-    pub fn gt(&self, rhs: &Vec4I) -> Self {
+    pub fn gt(&self, rhs: &VecInteger) -> Self {
         match self.1 {
             Vec4IType::I64X4 => self.gt_i64(rhs),
             Vec4IType::I32X8 => self.gt_i32(rhs),
@@ -274,27 +273,27 @@ impl Vec4I {
     }
 
     #[inline(always)]
-    pub fn gt_i64(&self, rhs: &Vec4I) -> Self {
+    pub fn gt_i64(&self, rhs: &VecInteger) -> Self {
         Self(unsafe { _mm256_cmpgt_epi64(self.0, rhs.0)}, Vec4IType::I64X4)
     }
 
     #[inline(always)]
-    pub fn gt_i32(&self, rhs: &Vec4I) -> Self {
+    pub fn gt_i32(&self, rhs: &VecInteger) -> Self {
         Self(unsafe { _mm256_cmpgt_epi32(self.0, rhs.0)}, Vec4IType::I32X8)
     }
 
     #[inline(always)]
-    pub fn gt_i16(&self, rhs: &Vec4I) -> Self {
+    pub fn gt_i16(&self, rhs: &VecInteger) -> Self {
         Self(unsafe { _mm256_cmpgt_epi16(self.0, rhs.0)}, Vec4IType::I16X16)
     }
 
     #[inline(always)]
-    pub fn gt_i8(&self, rhs: &Vec4I) -> Self {
+    pub fn gt_i8(&self, rhs: &VecInteger) -> Self {
         Self(unsafe { _mm256_cmpgt_epi8(self.0, rhs.0)}, Vec4IType::I8X32)
     }
 
     #[inline(always)]
-    pub fn ge(&self, rhs: &Vec4I) -> Self {
+    pub fn ge(&self, rhs: &VecInteger) -> Self {
         match self.1 {
             Vec4IType::I64X4 => self.ge_i64(rhs),
             Vec4IType::I32X8 => self.ge_i32(rhs),
@@ -308,27 +307,27 @@ impl Vec4I {
     }
 
     #[inline(always)]
-    pub fn ge_i64(&self, rhs: &Vec4I) -> Self {
+    pub fn ge_i64(&self, rhs: &VecInteger) -> Self {
         self.gt_i64(rhs) | self.eq_i64(rhs)
     }
 
     #[inline(always)]
-    pub fn ge_i32(&self, rhs: &Vec4I) -> Self {
+    pub fn ge_i32(&self, rhs: &VecInteger) -> Self {
         self.gt_i32(rhs) | self.eq_i32(rhs)
     }
 
     #[inline(always)]
-    pub fn ge_i16(&self, rhs: &Vec4I) -> Self {
+    pub fn ge_i16(&self, rhs: &VecInteger) -> Self {
         self.gt_i16(rhs) | self.eq_i16(rhs)
     }
 
     #[inline(always)]
-    pub fn ge_i8(&self, rhs: &Vec4I) -> Self {
+    pub fn ge_i8(&self, rhs: &VecInteger) -> Self {
         self.gt_i8(rhs) | self.eq_i8(rhs)
     }
 
     #[inline(always)]
-    pub fn lt(&self, rhs: &Vec4I) -> Self {
+    pub fn lt(&self, rhs: &VecInteger) -> Self {
         match self.1 {
             Vec4IType::I64X4 => self.lt_i64(rhs),
             Vec4IType::I32X8 => self.lt_i32(rhs),
@@ -342,27 +341,27 @@ impl Vec4I {
     }
 
     #[inline(always)]
-    pub fn lt_i64(&self, rhs: &Vec4I) -> Self {
+    pub fn lt_i64(&self, rhs: &VecInteger) -> Self {
         !self.ge_i64(rhs)
     }
 
     #[inline(always)]
-    pub fn lt_i32(&self, rhs: &Vec4I) -> Self {
+    pub fn lt_i32(&self, rhs: &VecInteger) -> Self {
         !self.ge_i32(rhs)
     }
 
     #[inline(always)]
-    pub fn lt_i16(&self, rhs: &Vec4I) -> Self {
+    pub fn lt_i16(&self, rhs: &VecInteger) -> Self {
         !self.ge_i16(rhs)
     }
 
     #[inline(always)]
-    pub fn lt_i8(&self, rhs: &Vec4I) -> Self {
+    pub fn lt_i8(&self, rhs: &VecInteger) -> Self {
         !self.ge_i8(rhs)
     }
 
     #[inline(always)]
-    pub fn le(&self, rhs: &Vec4I) -> Self {
+    pub fn le(&self, rhs: &VecInteger) -> Self {
         match self.1 {
             Vec4IType::I64X4 => self.le_i64(rhs),
             Vec4IType::I32X8 => self.le_i32(rhs),
@@ -376,42 +375,42 @@ impl Vec4I {
     }
 
     #[inline(always)]
-    pub fn le_i64(&self, rhs: &Vec4I) -> Self {
+    pub fn le_i64(&self, rhs: &VecInteger) -> Self {
         !self.gt_i64(rhs)
     }
 
     #[inline(always)]
-    pub fn le_i32(&self, rhs: &Vec4I) -> Self {
+    pub fn le_i32(&self, rhs: &VecInteger) -> Self {
         !self.gt_i32(rhs)
     }
 
     #[inline(always)]
-    pub fn le_i16(&self, rhs: &Vec4I) -> Self {
+    pub fn le_i16(&self, rhs: &VecInteger) -> Self {
         !self.gt_i16(rhs)
     }
 
     #[inline(always)]
-    pub fn le_i8(&self, rhs: &Vec4I) -> Self {
+    pub fn le_i8(&self, rhs: &VecInteger) -> Self {
         !self.gt_i8(rhs)
     }
 
     #[inline(always)]
-    pub fn and(&self, rhs: &Vec4I) -> Self {
+    pub fn and(&self, rhs: &VecInteger) -> Self {
         Self(unsafe { _mm256_and_si256(self.0, rhs.0)}, self.1)
     }
 
     #[inline(always)]
-    pub fn or(&self, rhs: &Vec4I) -> Self {
+    pub fn or(&self, rhs: &VecInteger) -> Self {
         Self(unsafe { _mm256_or_si256(self.0, rhs.0)}, self.1)
     }
 
     #[inline(always)]
-    pub fn xor(&self, rhs: &Vec4I) -> Self {
+    pub fn xor(&self, rhs: &VecInteger) -> Self {
         Self(unsafe { _mm256_xor_si256(self.0, rhs.0)}, self.1)
     }
 
     #[inline(always)]
-    pub fn andnot(&self, rhs: &Vec4I) -> Self {
+    pub fn andnot(&self, rhs: &VecInteger) -> Self {
         Self(unsafe { _mm256_andnot_si256(self.0, rhs.0)}, self.1)
     }
 
@@ -421,7 +420,7 @@ impl Vec4I {
     }
 }
 
-impl Add for Vec4I {
+impl Add for VecInteger {
     type Output = Self;
 
     #[inline(always)]
@@ -439,7 +438,7 @@ impl Add for Vec4I {
     }
 }
 
-impl Mul for Vec4I {
+impl Mul for VecInteger {
     type Output = Self;
 
     #[inline(always)]
@@ -452,7 +451,7 @@ impl Mul for Vec4I {
     }
 }
 
-impl Sub for Vec4I {
+impl Sub for VecInteger {
     type Output = Self;
 
     #[inline(always)]
@@ -470,7 +469,7 @@ impl Sub for Vec4I {
     }
 }
 
-impl BitAnd for Vec4I {
+impl BitAnd for VecInteger {
     type Output = Self;
 
     #[inline(always)]
@@ -479,7 +478,7 @@ impl BitAnd for Vec4I {
     }
 }
 
-impl BitOr for Vec4I {
+impl BitOr for VecInteger {
     type Output = Self;
 
     #[inline(always)]
@@ -488,7 +487,7 @@ impl BitOr for Vec4I {
     }
 }
 
-impl BitXor for Vec4I {
+impl BitXor for VecInteger {
     type Output = Self;
 
     #[inline(always)]
@@ -497,37 +496,37 @@ impl BitXor for Vec4I {
     }
 }
 
-impl Not for Vec4I {
+impl Not for VecInteger {
     type Output = Self;
 
     #[inline(always)]
     fn not(self) -> Self::Output {
-        Self(unsafe { _mm256_xor_si256(self.0, Vec4I::new_full_i64(-1).0)}, self.1)
+        Self(unsafe { _mm256_xor_si256(self.0, VecInteger::new_full_i64(-1).0)}, self.1)
     }
 }
 
-impl Default for Vec4I {
+impl Default for VecInteger {
     #[inline(always)]
     fn default() -> Self {
         Self::new()
     }
 }
 
-impl Display for Vec4I {
+impl Display for VecInteger {
     fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
         write!(f, "{:0X?}", self.load_i64())
     }
 }
 
-impl Debug for Vec4I {
+impl Debug for VecInteger {
     fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
         write!(f, "{:0X?}", self.load_i64())
     }
 }
 
-impl Copy for Vec4I {}
+impl Copy for VecInteger {}
 
-impl Clone for Vec4I {
+impl Clone for VecInteger {
     #[inline(always)]
     fn clone(&self) -> Self {
         Self(unsafe { _mm256_loadu_si256(addr_of!(self.0))}, self.1)

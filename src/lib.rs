@@ -1,14 +1,16 @@
 #![allow(dead_code)]
 
-pub mod vec4i;
+pub mod vec_i;
+pub mod vec_f32;
 
+#[cfg(test)]
 mod test {
-    use crate::vec4i::Vec4I;
+    use crate::vec_i::VecInteger;
 
     #[test]
     fn test() {
-        let a = Vec4I::new_full_i32(128);
-        let b = Vec4I::new_full_i32(128);
+        let a = VecInteger::new_full_i32(128);
+        let b = VecInteger::new_full_i32(128);
         let c = a * b;
         let d = c.load_i64();
         println!("{:?}", d);
