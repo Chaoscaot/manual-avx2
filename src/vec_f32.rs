@@ -1,6 +1,6 @@
 use std::arch::x86_64::*;
 use std::fmt::{Debug, Display, Formatter};
-use std::ops::{Add, BitAnd, BitOr, BitXor, Div, Mul, Sub};
+use std::ops::{Add, BitAnd, BitOr, BitXor, Div, Mul, Rem, Sub};
 use std::ptr::addr_of;
 
 pub struct VecF32(__m256);
@@ -206,6 +206,20 @@ impl Div for VecF32 {
     fn div(self, other: Self) -> Self {
         let a = unsafe { _mm256_div_ps(self.0, other.0) };
         Self(a)
+    }
+}
+
+impl Rem for VecF32 {
+    type Output = Self;
+
+    #[inline(always)]
+    fn rem(self, rhs: Self) -> Self::Output {
+        let mut s = self.load_f32();
+        let other = rhs.load_f32();
+        for i in 0..8 {
+            s[i] = s[i] % other[i];
+        }
+        return VecF32::new(s);
     }
 }
 
